@@ -149,13 +149,12 @@ void auringbuf_read(struct auringbuf *ab, uint8_t *p, size_t sz)
 	lock_write_get(ab->lock);
 
 	if (ab->cur_sz < sz) {
-		//Underrun fill with zeros
 #if AURINGBUF_DEBUG
 		(void)re_printf("auringbuf underrun: %ld\n",
 				sz);
 #endif
 		memset(p, 0, sz);
-		goto out;	
+		goto out;
 	}
 
 	ab->mb->pos = ab->pos_read;
@@ -165,11 +164,12 @@ void auringbuf_read(struct auringbuf *ab, uint8_t *p, size_t sz)
 		ab->mb->pos = 0;
 		(void)mbuf_read_mem(ab->mb, p + left, (sz - left));
 		ab->pos_read = sz - left;
-	} else {
+	}
+	else {
 		(void)mbuf_read_mem(ab->mb, p, sz);
 		ab->pos_read += sz;
 	}
-		
+
 	ab->cur_sz -= sz;
 
 
